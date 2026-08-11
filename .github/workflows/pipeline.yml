@@ -1,18 +1,34 @@
-name: CI/CD Lab
+name: Primer Pipeline CI
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
-  pipeline:
+  hello-ci:
+    name: Hello CI
     runs-on: ubuntu-latest
 
     steps:
-      - name: Mensaje de bienvenida
-        run: echo "¡Bienvenido al laboratorio de CI/CD!"
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Fecha y hora
+      - name: Mostrar información del entorno
+        run: |
+          echo "================================"
+          echo "      PRIMER PIPELINE CI"
+          echo "================================"
+          echo "Repositorio: ${{ github.repository }}"
+          echo "Rama: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "================================"
+
+      - name: Mostrar fecha y hora
         run: date
 
-      - name: Versión de Git
+      - name: Mostrar versión de Git
         run: git --version
+
+      - name: Finalizar pipeline
+        run: echo "Pipeline ejecutado correctamente."
