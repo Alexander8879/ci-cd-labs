@@ -30,6 +30,15 @@ jobs:
 
       - name: Mostrar versión de Git
         run: git --version
+        
+      - name: Provocar error controlado
+        continue-on-error: true
+        run: |
+          echo "================================"
+          echo "      ERROR CONTROLADO"
+          echo "================================"
+          echo "Este error es intencional."
+          exit 1
 
       - name: Finalizar pipeline
         run: echo "Pipeline ejecutado correctamente."
