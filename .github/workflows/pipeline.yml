@@ -32,12 +32,11 @@ jobs:
         run: git --version
         
       - name: Provocar error controlado
-        continue-on-error: true
         run: |
           echo "================================"
           echo "      ERROR CONTROLADO"
           echo "================================"
-          echo "Este error es intencional."
+          echo "Este error es intencional para probar el pipeline."
           exit 1
 
       - name: Finalizar pipeline
