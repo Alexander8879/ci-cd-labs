@@ -1,53 +1,55 @@
-name: Primer Pipeline CI
+name: Laboratorio 3 - Pipeline CI
+
 on:
   push:
     branches:
       - main
       - "feature/**"
+
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
     name: Compilación
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: "21"
+          distribution: "temurin"
           cache: maven
 
-      - name: Permisos de ejecución a Maven Wrapper
-        run: chmod +x mvnw
-
       - name: Compilar código fuente
-        run: ./mvnw clean compile -B
+        run: mvn clean compile -B
+
 
   test:
     name: Pruebas Unitarias y Cobertura
     needs: build
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: "21"
+          distribution: "temurin"
           cache: maven
 
-      - name: Permisos de ejecución a Maven Wrapper
-        run: chmod +x mvnw
-
       - name: Ejecutar pruebas y generar cobertura
-        run: ./mvnw test -B
+        run: mvn test -B
 
-      - name: Publicar reporte de pruebas (Surefire)
+      - name: Publicar reporte de pruebas
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -55,7 +57,7 @@ jobs:
           path: target/surefire-reports/
           retention-days: 5
 
-      - name: Publicar reporte de cobertura (JaCoCo)
+      - name: Publicar reporte de cobertura JaCoCo
         uses: actions/upload-artifact@v4
         if: always()
         with:
