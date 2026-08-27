@@ -1,0 +1,39 @@
+name: Release Maven
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Compilar proyecto Maven
+        run: ./mvnw clean package
+
+      - name: Buscar JAR
+        run: |
+          JAR=$(find target -maxdepth 1 -name "*.jar" ! -name "*original*" | head -n 1)
+          echo "JAR generado: $JAR"
+          echo "JAR=$JAR" >> $GITHUB_ENV
+
+      - name: Crear GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.JAR }}
+          generate_release_notes: true
